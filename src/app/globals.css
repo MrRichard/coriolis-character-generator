@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 220, 226, 240;
+  --background-start-rgb: 10, 15, 30;
+  --background-end-rgb: 15, 25, 45;
+  --accent-primary: 88, 101, 242;
+  --accent-secondary: 149, 97, 226;
+  --card-bg: 25, 35, 60;
+  --card-border: 40, 50, 80;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(1px 1px at 40px 60px, rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 20px 50px, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 30px 100px, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 40px 60px, rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 110px 90px, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 90px 10px, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 160px 120px, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.15;
+  z-index: -1;
+}
+
+.wizard-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.wizard-step {
+  width: 100%;
+}
+
+/* Custom card styling */
+.card {
+  background-color: rgba(var(--card-bg), 0.8);
+  border: 1px solid rgba(var(--card-border), 0.6);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+/* Button styling */
+.btn-primary {
+  background: linear-gradient(
+    to right,
+    rgba(var(--accent-primary), 0.9),
+    rgba(var(--accent-secondary), 0.9)
+  );
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(60, 70, 100, 0.6);
+  color: rgb(var(--foreground-rgb));
+  border: 1px solid rgba(var(--card-border), 0.6);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(70, 80, 110, 0.8);
+}
+
+/* Selection card styling */
+.selection-card {
+  background-color: rgba(var(--card-bg), 0.6);
+  border: 1px solid rgba(var(--card-border), 0.4);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.selection-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-color: rgba(var(--accent-primary), 0.6);
+}
+
+.selection-card.selected {
+  background-color: rgba(var(--accent-primary), 0.2);
+  border-color: rgba(var(--accent-primary), 0.8);
+  box-shadow: 0 0 12px rgba(var(--accent-primary), 0.4);
+}
+
+/* Form input styling */
+input, textarea, select {
+  background-color: rgba(30, 40, 65, 0.6);
+  border: 1px solid rgba(var(--card-border), 0.6);
+  color: rgb(var(--foreground-rgb));
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: rgba(var(--accent-primary), 0.8);
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary), 0.3);
+}
+
+/* Glow effect for headings */
+h1, h2, h3 {
+  text-shadow: 0 0 10px rgba(var(--accent-primary), 0.3);
+}
+
+/* Portrait container */
+.portrait-container {
+  border: 2px solid rgba(var(--accent-secondary), 0.6);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(var(--accent-secondary), 0.4);
+}
