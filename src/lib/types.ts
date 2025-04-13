@@ -1,4 +1,4 @@
-// src/lib/types.ts
+// src/lib/types.ts (just updating the Character interface)
 export interface Character {
   name: string;
   concept: string;
@@ -43,7 +43,8 @@ export interface Character {
   // Description and portrait
   appearance: string;
   portraitPrompt: string;
-  portraitUrl?: string; // Added this property
+  portraitUrl?: string;
+  localPortraitUrl?: string; // Added this field for storing data URLs
 }
 
 export interface AppState {

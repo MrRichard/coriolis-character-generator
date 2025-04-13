@@ -1,5 +1,5 @@
 // src/components/wizard/CharacterBackgroundPage.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import Card from '../Card';
 import Button from '../Button';
 import SelectionCard from '../SelectionCard';
@@ -22,62 +22,83 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
   const currentPlayerIndex = appState.currentPlayerIndex;
   const characters = [...appState.characters];
   
-  // Initialize character if it doesn't exist
-  if (!characters[currentPlayerIndex]) {
-    characters[currentPlayerIndex] = {
-      groupConcept: appState.groupConcept,
-      groupTalent: appState.groupTalent,
-      name: '',
-      concept: '',
-      origin: '',
-      upbringing: '',
-      humanity: '',
-      reputation: 0,
-      strength: 1,
-      agility: 1,
-      wits: 1,
-      empathy: 1,
-      dexterity: 0,
-      force: 0,
-      infiltration: 0,
-      manipulation: 0,
-      meleeCombat: 0,
-      observation: 0,
-      rangedCombat: 0,
-      survival: 0,
-      command: 0,
-      culture: 0,
-      dataDjinn: 0,
-      medicurgy: 0,
-      mysticPowers: 0,
-      pilot: 0,
-      science: 0,
-      technology: 0,
-      talent: '',
-      icon: '',
-      iconTalent: '',
-      personalProblem: '',
-      appearance: '',
-      portraitPrompt: ''
-    };
-    updateAppState({ characters });
-  }
+  // Move character initialization to useEffect to avoid setState during render
+  useEffect(() => {
+    // Initialize character if it doesn't exist
+    if (!appState.characters[currentPlayerIndex]) {
+      const updatedCharacters = [...appState.characters];
+      updatedCharacters[currentPlayerIndex] = {
+        groupConcept: appState.groupConcept,
+        groupTalent: appState.groupTalent,
+        name: '',
+        concept: '',
+        origin: '',
+        upbringing: '',
+        humanity: '',
+        reputation: 0,
+        strength: 1,
+        agility: 1,
+        wits: 1,
+        empathy: 1,
+        dexterity: 0,
+        force: 0,
+        infiltration: 0,
+        manipulation: 0,
+        meleeCombat: 0,
+        observation: 0,
+        rangedCombat: 0,
+        survival: 0,
+        command: 0,
+        culture: 0,
+        dataDjinn: 0,
+        medicurgy: 0,
+        mysticPowers: 0,
+        pilot: 0,
+        science: 0,
+        technology: 0,
+        talent: '',
+        icon: '',
+        iconTalent: '',
+        personalProblem: '',
+        appearance: '',
+        portraitPrompt: ''
+      };
+      updateAppState({ characters: updatedCharacters });
+    }
+  }, [appState.characters, currentPlayerIndex, appState.groupConcept, appState.groupTalent, updateAppState]);
 
-  const character = characters[currentPlayerIndex];
+  // Get the current character (safely)
+  const character = appState.characters[currentPlayerIndex] || {
+    origin: '',
+    upbringing: '',
+    humanity: ''
+  };
 
   const handleOriginSelect = (origin: string) => {
-    characters[currentPlayerIndex] = { ...character, origin };
-    updateAppState({ characters });
+    const updatedCharacters = [...appState.characters];
+    updatedCharacters[currentPlayerIndex] = { 
+      ...(updatedCharacters[currentPlayerIndex] || {}), 
+      origin 
+    };
+    updateAppState({ characters: updatedCharacters });
   };
 
   const handleUpbringingSelect = (upbringing: string) => {
-    characters[currentPlayerIndex] = { ...character, upbringing };
-    updateAppState({ characters });
+    const updatedCharacters = [...appState.characters];
+    updatedCharacters[currentPlayerIndex] = { 
+      ...(updatedCharacters[currentPlayerIndex] || {}), 
+      upbringing 
+    };
+    updateAppState({ characters: updatedCharacters });
   };
 
   const handleHumanitySelect = (humanity: string) => {
-    characters[currentPlayerIndex] = { ...character, humanity };
-    updateAppState({ characters });
+    const updatedCharacters = [...appState.characters];
+    updatedCharacters[currentPlayerIndex] = { 
+      ...(updatedCharacters[currentPlayerIndex] || {}), 
+      humanity 
+    };
+    updateAppState({ characters: updatedCharacters });
   };
 
   const canProceed = character.origin !== '' && character.upbringing !== '' && character.humanity !== '';
