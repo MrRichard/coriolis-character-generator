@@ -48,12 +48,11 @@ export const GROUP_TALENTS: GroupTalent[] = [
 ];
 
 export const ORIGINS: Origin[] = [
-  { name: 'Algol' },
-  { name: 'Mira' },
-  { name: 'Kua' },
-  { name: 'Dabaran' },
-  { name: 'Zalos' },
-  { name: 'Random' }
+  { name: 'Algol', description: "A planet of rebels, ruined by heavy industry and under draconian Consortium rule." },
+  { name: 'Mira', description: "The cradel of firstcome culture. Filled with temples, churches, and cloister palaces." },
+  { name: 'Kua', description: "The center of the Horizon. home of the space station Coriolis." },
+  { name: 'Dabaran', description: "A barren desert with ravine seraglios, oasis gardens, and domed palaces." },
+  { name: 'Zalos', description: "Deeply devoted tot he Icon the Martyr (an incarnation of the Judge), locked in constant civil war." }
 ];
 
 export const UPBRINGINGS: Upbringing[] = [

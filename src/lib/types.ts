@@ -68,6 +68,7 @@ export interface GroupTalent {
 
 export interface Origin {
   name: string;
+  description: string;
 }
 
 export interface Upbringing {

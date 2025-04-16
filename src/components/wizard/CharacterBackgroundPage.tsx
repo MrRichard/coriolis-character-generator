@@ -119,6 +119,7 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
             <SelectionCard
               key={origin.name}
               title={origin.name}
+              description={origin.description}
               selected={character.origin === origin.name}
               onClick={() => handleOriginSelect(origin.name)}
               className="h-full"
