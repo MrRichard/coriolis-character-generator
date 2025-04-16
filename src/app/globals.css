@@ -126,12 +126,16 @@ body::before {
   color: rgb(var(--text-bright));
 }
 
-/* Selection card styling */
+/* Update the selection card styling */
 .selection-card {
   background-color: rgba(var(--card-bg), 0.6);
   border: 1px solid rgba(var(--card-border), 0.4);
   border-radius: 0.5rem;
   transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 130px;
 }
 
 .selection-card:hover {
@@ -146,6 +150,15 @@ body::before {
   box-shadow: 0 0 12px rgba(var(--accent-primary), 0.4);
 }
 
+.selection-card h3 {
+  color: rgb(var(--text-bright));
+  margin-bottom: 0.5rem;
+}
+
+.selection-card p {
+  color: rgb(var(--text-normal));
+  line-height: 1.4;
+}
 /* Form input styling */
 input, textarea, select {
   background-color: rgba(var(--input-bg), 0.6) !important;

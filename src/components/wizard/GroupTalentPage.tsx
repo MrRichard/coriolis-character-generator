@@ -4,7 +4,7 @@ import Card from '../Card';
 import Button from '../Button';
 import SelectionCard from '../SelectionCard';
 import { AppState } from '../../lib/types';
-import { GROUP_TALENTS } from '../../lib/data';
+import { GROUP_TALENTS, GROUP_TALENT_DESCRIPTIONS } from '../../lib/data';
 
 interface GroupTalentPageProps {
   appState: AppState;
@@ -41,13 +41,15 @@ const GroupTalentPage: React.FC<GroupTalentPageProps> = ({
         </p>
       </Card>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 gap-4 mb-6">
         {availableTalents.map((talent) => (
           <SelectionCard
             key={talent}
             title={talent}
+            description={GROUP_TALENT_DESCRIPTIONS[talent] || ''}
             selected={appState.groupTalent === talent}
             onClick={() => handleTalentSelect(talent)}
+            className="h-full"
           />
         ))}
       </div>

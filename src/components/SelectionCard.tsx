@@ -18,11 +18,11 @@ const SelectionCard: React.FC<SelectionCardProps> = ({
 }) => {
   return (
     <div
-      className={`selection-card p-4 cursor-pointer ${selected ? 'selected' : ''} ${className}`}
+      className={`selection-card p-4 cursor-pointer flex flex-col h-full ${selected ? 'selected' : ''} ${className}`}
       onClick={onClick}
     >
-      <h3 className="text-lg font-semibold mb-1">{title}</h3>
-      {description && <p className="text-sm opacity-80">{description}</p>}
+      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+      {description && <p className="text-sm opacity-90 flex-grow">{description}</p>}
     </div>
   );
 };

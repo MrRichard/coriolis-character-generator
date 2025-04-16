@@ -89,8 +89,8 @@ export interface PlayerConcept {
   advancedSkills: string[];
 }
 
-export interface Talent {
+// New interface for group talent descriptions
+export interface GroupTalentDescription {
   name: string;
-  concepts: string[];
   description: string;
 }
