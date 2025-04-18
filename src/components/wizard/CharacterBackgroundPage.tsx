@@ -1,5 +1,5 @@
 // src/components/wizard/CharacterBackgroundPage.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../Card';
 import Button from '../Button';
 import SelectionCard from '../SelectionCard';
@@ -67,6 +67,9 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
     }
   }, [appState.characters, currentPlayerIndex, appState.groupConcept, appState.groupTalent, updateAppState]);
 
+  // Tab state to switch between menus
+  const [section, setSection] = useState<'origin'|'upbringing'|'humanity'>('origin');
+  
   // Get the current character (safely)
   const character = appState.characters[currentPlayerIndex] || {
     origin: '',
@@ -108,17 +111,40 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
       <h1 className="text-3xl font-bold text-center mb-6">
         Character Background - Player {currentPlayerIndex + 1}
       </h1>
+      {/* Menu Tabs */}
+      <div className="flex justify-center mb-6 border-b border-gray-300">
+        {[
+          { key: 'origin', label: 'Home World' },
+          { key: 'upbringing', label: 'Upbringing' },
+          { key: 'humanity', label: 'Humanity' }
+        ].map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setSection(key as any)}
+            className={
+              `px-4 py-2 -mb-px font-medium transition-colors ` +
+              (section === key
+                ? 'text-accent-primary border-b-2 border-accent-primary'
+                : 'text-gray-600 border-b-2 border-transparent hover:text-gray-800 hover:border-gray-400')
+            }
+          >
+            {label}
+          </button>
+        ))}
+      </div>
       
+      {section === 'origin' && (
       <Card className="mb-6">
-        <h2 className="text-xl font-semibold mb-4">Origin</h2>
+        <h2 className="text-xl font-semibold mb-4">Home World</h2>
         <p className="mb-4">
-          Select your character's origin system:
+          Select your character's home world:
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
           {ORIGINS.map((origin) => (
             <SelectionCard
               key={origin.name}
               title={origin.name}
+              description={origin.description}
               selected={character.origin === origin.name}
               onClick={() => handleOriginSelect(origin.name)}
               className="h-full"
@@ -126,7 +152,8 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
           ))}
         </div>
       </Card>
-      
+      )}
+      {section === 'upbringing' && (
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4">Upbringing</h2>
         <p className="mb-4">
@@ -137,7 +164,10 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
             <SelectionCard
               key={upbringing.name}
               title={upbringing.name}
-              description={`Base Rep: ${upbringing.repBase}, Skill Points: ${upbringing.skillPoints}`}
+              description={
+                `Base Rep: ${upbringing.repBase}, Skill Points: ${upbringing.skillPoints}, ` +
+                `Attribute Points: ${upbringing.attributePoints}, Starting Birr: ${upbringing.startingBirr}`
+              }
               selected={character.upbringing === upbringing.name}
               onClick={() => handleUpbringingSelect(upbringing.name)}
               className="h-full"
@@ -145,7 +175,8 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
           ))}
         </div>
       </Card>
-      
+      )}
+      {section === 'humanity' && (
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4">Humanity</h2>
         <p className="mb-4">
@@ -164,7 +195,8 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
           ))}
         </div>
       </Card>
-      
+      )}
+      {/* Navigation */}
       <div className="flex justify-between">
         <Button 
           variant="outline" 

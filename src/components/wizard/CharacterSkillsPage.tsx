@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Card from '../Card';
 import Button from '../Button';
 import { AppState } from '../../lib/types';
-import { PLAYER_CONCEPTS, UPBRINGINGS, getRandomInt } from '../../lib/data';
+import { PLAYER_CONCEPTS, UPBRINGINGS } from '../../lib/data';
 
 interface CharacterSkillsPageProps {
   appState: AppState;
@@ -28,6 +28,13 @@ const CharacterSkillsPage: React.FC<CharacterSkillsPageProps> = ({
   
   // Get the advanced skills for this concept
   const advancedSkills = selectedConcept?.advancedSkills || [];
+  
+  // Determine the cap for each skill: general and concept-advanced => 3, others => 1
+  const getSkillCap = (skillKey: keyof typeof skills): number => {
+    if (isGeneralSkill(skillKey)) return 3;
+    const name = formatSkillName(skillKey);
+    return advancedSkills.includes(name) ? 3 : 1;
+  };
   
   // Initialize skills state
   const [skills, setSkills] = useState({
@@ -62,30 +69,19 @@ const CharacterSkillsPage: React.FC<CharacterSkillsPageProps> = ({
   }, [skills]);
   
   const handleSkillChange = (skill: keyof typeof skills, value: number) => {
-    // Check if the new value is valid
-    if (value < 0) return; // Minimum value is 0
-    if (value > 3) return; // Maximum value is 3
+    // Ensure within bounds
+    if (value < 0) return;
+    const cap = getSkillCap(skill);
+    if (value > cap) return;
     
-    // For advanced skills, check if this concept can use them
-    if (!isGeneralSkill(skill) && !advancedSkills.includes(formatSkillName(skill))) {
-      return;
-    }
+    // Calculate points difference and enforce total
+    const diff = value - skills[skill];
+    if (pointsUsed + diff > totalSkillPoints) return;
     
-    // Calculate points that would be used with this change
-    const pointDifference = value - skills[skill];
-    
-    // Check if we have enough points
-    if (pointsUsed + pointDifference > totalSkillPoints) return;
-    
-    // Update the skill
+    // Apply update
     const newSkills = { ...skills, [skill]: value };
     setSkills(newSkills);
-    
-    // Update character
-    characters[currentPlayerIndex] = { 
-      ...character,
-      ...newSkills
-    };
+    characters[currentPlayerIndex] = { ...character, ...newSkills };
     updateAppState({ characters });
   };
   
@@ -191,34 +187,45 @@ const CharacterSkillsPage: React.FC<CharacterSkillsPageProps> = ({
         <p className="mb-4">
           Distribute {totalSkillPoints} skill points. Each skill can have a maximum of 3 points.
         </p>
-        <p className="mb-4 font-medium">
-          Points used: {pointsUsed} / {totalSkillPoints}
-        </p>
+        <div className="mb-4 flex items-baseline space-x-2">
+          <span className="text-lg text-secondary">Points used:</span>
+          <span className="text-2xl font-bold text-accent-primary">{pointsUsed}</span>
+          <span className="text-lg text-secondary">/</span>
+          <span className="text-2xl font-bold text-accent-primary">{totalSkillPoints}</span>
+        </div>
         
         <div className="mb-6">
           <h3 className="font-medium mb-2">General Skills</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {['dexterity', 'force', 'infiltration', 'manipulation', 
-              'meleeCombat', 'observation', 'rangedCombat', 'survival'].map(skill => (
+            {['dexterity', 'force', 'infiltration', 'manipulation',
+              'meleeCombat', 'observation', 'rangedCombat', 'survival'].map(skill => {
+              const key = skill as keyof typeof skills;
+              const cap = getSkillCap(key);
+              return (
               <div key={skill} className="p-3 border rounded-md">
                 <h4 className="font-medium">{formatSkillName(skill)}</h4>
                 <div className="flex items-center mt-2">
-                  <button 
+                  <button
                     className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center"
-                    onClick={() => handleSkillChange(skill as keyof typeof skills, skills[skill as keyof typeof skills] - 1)}
+                    onClick={() => handleSkillChange(key, skills[key] - 1)}
+                    disabled={skills[key] <= 0}
                   >
                     -
                   </button>
-                  <span className="mx-3 text-lg font-medium">{skills[skill as keyof typeof skills]}</span>
-                  <button 
+                  <span className="mx-4 text-2xl font-bold text-accent-primary">
+                    {skills[key]}
+                  </span>
+                  <button
                     className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center"
-                    onClick={() => handleSkillChange(skill as keyof typeof skills, skills[skill as keyof typeof skills] + 1)}
+                    onClick={() => handleSkillChange(key, skills[key] + 1)}
+                    disabled={skills[key] >= cap || pointsUsed >= totalSkillPoints}
                   >
                     +
                   </button>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
         
@@ -228,28 +235,28 @@ const CharacterSkillsPage: React.FC<CharacterSkillsPageProps> = ({
             Your concept ({character.concept}) can use these advanced skills: {advancedSkills.join(', ')}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {['command', 'culture', 'dataDjinn', 'medicurgy', 
+            {['command', 'culture', 'dataDjinn', 'medicurgy',
               'mysticPowers', 'pilot', 'science', 'technology'].map(skill => {
-              const isAvailable = advancedSkills.includes(formatSkillName(skill));
+              const key = skill as keyof typeof skills;
+              const cap = getSkillCap(key);
               return (
-                <div 
-                  key={skill} 
-                  className={`p-3 border rounded-md ${!isAvailable ? 'opacity-50' : ''}`}
-                >
+                <div key={skill} className="p-3 border rounded-md">
                   <h4 className="font-medium">{formatSkillName(skill)}</h4>
                   <div className="flex items-center mt-2">
-                    <button 
+                    <button
                       className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center"
-                      onClick={() => handleSkillChange(skill as keyof typeof skills, skills[skill as keyof typeof skills] - 1)}
-                      disabled={!isAvailable}
+                      onClick={() => handleSkillChange(key, skills[key] - 1)}
+                      disabled={skills[key] <= 0}
                     >
                       -
                     </button>
-                    <span className="mx-3 text-lg font-medium">{skills[skill as keyof typeof skills]}</span>
-                    <button 
+                    <span className="mx-4 text-2xl font-bold text-accent-primary">
+                      {skills[key]}
+                    </span>
+                    <button
                       className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center"
-                      onClick={() => handleSkillChange(skill as keyof typeof skills, skills[skill as keyof typeof skills] + 1)}
-                      disabled={!isAvailable}
+                      onClick={() => handleSkillChange(key, skills[key] + 1)}
+                      disabled={skills[key] >= cap || pointsUsed >= totalSkillPoints}
                     >
                       +
                     </button>

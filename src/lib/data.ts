@@ -46,20 +46,38 @@ export const GROUP_TALENTS: GroupTalent[] = [
     concepts: ['Last Laugh', 'Mercy of the Icons', 'One Last Birr']
   }
 ];
+// Descriptions for each group talent, shown when selecting your group's shared ability
+export const GROUP_TALENT_DESCRIPTIONS: { [key: string]: string } = {
+  'A Nose for Birr': 'When trading, you get a +2 to Manipulation. One user per session for the whole group',
+  'Everything is for Sale': 'You have a knack for finding the most corrupt public servants, toll officers, or guards, and always get a +2 to Manipulation when you are bribing someone',
+  'Quickest Route': 'You find the quickest route. Travel takes half the amount of time, or one encounter alone the way may be ignored. The GM gets 1 DP per use. One use per journey.',
+  'Assault': 'You get a +2 to Ranged Combat, but only when everyone in the group attacks the same target in the same turn.',
+  'Charge': 'You get a +2 to Melee combat, but only when everyone in the group, in the same turn, also spends at least one fast action (1 AP) on movement. The bonus only lasts one turn.',
+  'Situational Awareness': 'You can sense danger before it happens, gaining a bonus to initiative checks.',
+  'A Friend in Every Port': 'You can find a useful contact in a new place. The contact can protect you, lend you gear, or vouch for you with local authorites. The GM gets 1 DP per use. One user per session for the whole group.',
+  'Assassin\'s Guild': 'You can test infiltration instead of melee combat when you make a melee combat attack against an enemy who isn\'t aware of you.',
+  'Dancers of Ahlam': 'You can text Dex instead of manipulation when trying to make a good impression.',
+  'Seasoned Travelers': 'You can test manipulation instead of culture to understand a group\'s customs.',
+  'Survivors': 'You can get out of a dangerous situation somehow connected to nature, such as a bushfire or explosive decompression. The whole group escapes danger. The GM gets 1 DP per use. One use per session.',
+  'Truth Seekers': 'You can find important information or get a clue from the GM without rolling Dice. The information must be important enough to enable you to overcome a minor obstacle or challenge in a scenario. The GM gets 1 DP per use. One use per session for the whole group.',
+  'Last Laugh': 'You can get yourselves out of a pinch using your knack for entertainment. The GM gets 1 DP per use. One use per session for the whole group.',
+  'Mercy of the Icons': 'When you are in a tight spot, the Icons will hear you. This means that you can cancel the effects of a Darkness Points that have just been spent by the GM. One use per session for the whole group.',
+  'One Last Birr': 'You can make a living out of your craft or performance. Test Dex instead of manipulation to find basic subsistence when in a new place.'
+};
 
 export const ORIGINS: Origin[] = [
-  { name: 'Algol' },
-  { name: 'Mira' },
-  { name: 'Kua' },
-  { name: 'Dabaran' },
-  { name: 'Zalos' },
-  { name: 'Random' }
+  { name: 'Algol', description: "A planet of rebels, ruined by heavy industry and under draconian Consortium rule." },
+  { name: 'Mira', description: "The cradel of firstcome culture. Filled with temples, churches, and cloister palaces." },
+  { name: 'Kua', description: "The center of the Horizon. home of the space station Coriolis." },
+  { name: 'Dabaran', description: "A barren desert with ravine seraglios, oasis gardens, and domed palaces." },
+  { name: 'Zalos', description: "Deeply devoted tot he Icon the Martyr (an incarnation of the Judge), locked in constant civil war." },
+  { name: 'Other' }
 ];
 
 export const UPBRINGINGS: Upbringing[] = [
-  { name: 'Plebian', repBase: 2, skillPoints: 8 },
-  { name: 'Stationary', repBase: 4, skillPoints: 10 },
-  { name: 'Privileged', repBase: 6, skillPoints: 12 }
+  { name: 'Plebian', repBase: 2, skillPoints: 8, attributePoints: 15, startingBirr: 500 },
+  { name: 'Stationary', repBase: 4, skillPoints: 10, attributePoints: 14, startingBirr: 1000 },
+  { name: 'Privileged', repBase: 6, skillPoints: 12, attributePoints: 13, startingBirr: 5000 }
 ];
 
 export const HUMANITIES: Humanity[] = [

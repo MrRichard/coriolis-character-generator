@@ -1,10 +1,10 @@
 // src/components/wizard/CharacterConceptPage.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '../Card';
 import Button from '../Button';
 import SelectionCard from '../SelectionCard';
 import { AppState } from '../../lib/types';
-import { PLAYER_CONCEPTS, calculateReputation } from '../../lib/data';
+import { PLAYER_CONCEPTS, calculateReputation, UPBRINGINGS, HUMANITIES, GROUP_CONCEPTS } from '../../lib/data';
 
 interface CharacterConceptPageProps {
   appState: AppState;
@@ -26,27 +26,27 @@ const CharacterConceptPage: React.FC<CharacterConceptPageProps> = ({
   // Filter concepts based on group concept if needed
   const groupConcept = appState.groupConcept;
   const availableConcepts = PLAYER_CONCEPTS;
+  // Partition into recommended vs others based on selected group
+  const groupDef = GROUP_CONCEPTS.find(g => g.name === groupConcept);
+  const recommendedConcepts = availableConcepts.filter(c => groupDef?.concepts.includes(c.name));
+  const otherConcepts = availableConcepts.filter(c => !groupDef?.concepts.includes(c.name));
 
   const handleConceptSelect = (conceptName: string) => {
     const selectedConcept = PLAYER_CONCEPTS.find(c => c.name === conceptName);
     
     if (selectedConcept) {
-      // Find the upbringing and humanity objects
-      const upbringing = { 
-        name: character.upbringing,
-        repBase: character.upbringing === 'Plebian' ? 2 : 
-                 character.upbringing === 'Stationary' ? 4 : 6,
-        skillPoints: character.upbringing === 'Plebian' ? 8 : 
-                     character.upbringing === 'Stationary' ? 10 : 12
-      };
-      
-      const humanity = {
-        name: character.humanity,
-        repDivisor: character.humanity === 'Pure-blood' ? 1 : 2
-      };
-      
-      // Calculate reputation
-      const reputation = calculateReputation(upbringing, selectedConcept, humanity);
+      // Retrieve upbringing and humanity records for calculation
+      const selectedUpbringing = UPBRINGINGS.find(u => u.name === character.upbringing);
+      const selectedHumanity = HUMANITIES.find(h => h.name === character.humanity);
+      if (!selectedUpbringing || !selectedHumanity) {
+        return;
+      }
+      // Calculate reputation using configured data
+      const reputation = calculateReputation(
+        selectedUpbringing,
+        selectedConcept,
+        selectedHumanity
+      );
       
       characters[currentPlayerIndex] = { 
         ...character, 
@@ -58,6 +58,8 @@ const CharacterConceptPage: React.FC<CharacterConceptPageProps> = ({
   };
 
   const canProceed = character.concept !== '';
+  // State to toggle display of non-recommended concepts
+  const [showOther, setShowOther] = useState(false);
 
   return (
     <div className="max-w-3xl mx-auto py-8">
@@ -80,16 +82,50 @@ const CharacterConceptPage: React.FC<CharacterConceptPageProps> = ({
         )}
       </Card>
       
-      <div className="grid grid-cols-1 gap-3 mb-6 max-h-96 overflow-y-auto p-2">
-        {availableConcepts.map((concept) => (
-          <SelectionCard
-            key={concept.name}
-            title={concept.name}
-            description={`Key Attribute: ${concept.keyAttribute}, Rep Bonus: ${concept.repBonus > 0 ? '+' + concept.repBonus : concept.repBonus}`}
-            selected={character.concept === concept.name}
-            onClick={() => handleConceptSelect(concept.name)}
-          />
-        ))}
+      <div className="mb-6 space-y-6">
+        {recommendedConcepts.length > 0 && (
+          <Card className="border-2 border-accent-primary bg-accent-primary bg-opacity-10 p-4">
+            <h3 className="text-lg font-semibold mb-4">Recommended Concepts</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {recommendedConcepts.map(concept => (
+                <SelectionCard
+                  key={concept.name}
+                  title={concept.name}
+                  description={`Key Attribute: ${concept.keyAttribute}, Rep Bonus: ${concept.repBonus > 0 ? '+' + concept.repBonus : concept.repBonus}`}
+                  selected={character.concept === concept.name}
+                  onClick={() => handleConceptSelect(concept.name)}
+                />
+              ))}
+            </div>
+          </Card>
+        )}
+        {otherConcepts.length > 0 && (
+          <Card className="p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Other Concepts</h3>
+              <Button
+                variant="outline"
+                className="text-sm px-2 py-1"
+                onClick={() => setShowOther(!showOther)}
+              >
+                {showOther ? 'Hide' : 'Show'} Others
+              </Button>
+            </div>
+            {showOther && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {otherConcepts.map(concept => (
+                  <SelectionCard
+                    key={concept.name}
+                    title={concept.name}
+                    description={`Key Attribute: ${concept.keyAttribute}, Rep Bonus: ${concept.repBonus > 0 ? '+' + concept.repBonus : concept.repBonus}`}
+                    selected={character.concept === concept.name}
+                    onClick={() => handleConceptSelect(concept.name)}
+                  />
+                ))}
+              </div>
+            )}
+          </Card>
+        )}
       </div>
       
       <div className="flex justify-between">

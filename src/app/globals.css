@@ -5,13 +5,19 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 220, 226, 240;
-  --background-start-rgb: 8, 12, 24;       /* Darker space background */
-  --background-end-rgb: 12, 18, 36;        /* Darker space background */
-  --accent-primary: 95, 111, 255;          /* Brighter accent */
-  --accent-secondary: 159, 107, 235;       /* Brighter secondary accent */
-  --card-bg: 20, 28, 50;                   /* Darker card backgrounds */
-  --card-border: 45, 55, 85;               /* More visible borders */
+  /* Text and background colors */
+  --foreground-rgb: 234, 234, 234;         /* light gray text */
+  --background-start-rgb: 10, 14, 30;      /* deep space start */
+  --background-end-rgb: 18, 24, 40;        /* deep space end */
+  --text-secondary-rgb: 180, 190, 210;     /* muted text */
+
+  /* Accent colors */
+  --accent-primary-rgb: 102, 217, 239;     /* cyanish accent */
+  --accent-secondary-rgb: 255, 111, 105;   /* warm accent */
+
+  /* Card styling */
+  --card-bg-rgb: 15, 22, 40;               /* card background */
+  --card-border-rgb: 40, 55, 75;           /* card border */
   --input-bg: 30, 38, 60;                  /* Darker input backgrounds */
   --button-hover: 60, 75, 130;             /* Brighter button hover */
   --success-color: 72, 187, 120;           /* Success color */
@@ -22,12 +28,12 @@
   --text-dim: 160, 170, 190;               /* Dimmed text */
 }
 
-body {
+ body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    to bottom,
-    rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb))
+  background: radial-gradient(
+    circle at 50% 20%,
+    rgb(var(--background-start-rgb)) 0%,
+    rgb(var(--background-end-rgb)) 100%
   );
   min-height: 100vh;
   position: relative;
@@ -55,20 +61,24 @@ body::before {
   z-index: -1;
 }
 
+/* Wizard page container layout */
 .wizard-container {
-  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
   overflow: hidden;
-  position: relative;
 }
 
+/* Wizard step content */
 .wizard-step {
   width: 100%;
+  padding: 1rem;
 }
 
 /* Custom card styling */
 .card {
-  background-color: rgba(var(--card-bg), 0.8);
-  border: 1px solid rgba(var(--card-border), 0.6);
+  background-color: rgba(var(--card-bg-rgb), 0.8);
+  border: 1px solid rgba(var(--card-border-rgb), 0.6);
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(5px);
@@ -78,8 +88,8 @@ body::before {
 .btn-primary {
   background: linear-gradient(
     to right,
-    rgba(var(--accent-primary), 0.9),
-    rgba(var(--accent-secondary), 0.9)
+    rgba(var(--accent-primary-rgb), 0.9),
+    rgba(var(--accent-secondary-rgb), 0.9)
   );
   color: rgb(var(--text-bright));
   border: none;
@@ -97,9 +107,9 @@ body::before {
 }
 
 .btn-secondary {
-  background: rgba(var(--card-bg), 0.8);
+  background: rgba(var(--card-bg-rgb), 0.8);
   color: rgb(var(--text-normal));
-  border: 1px solid rgba(var(--card-border), 0.6);
+  border: 1px solid rgba(var(--card-border-rgb), 0.6);
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
   font-weight: 500;
@@ -114,7 +124,7 @@ body::before {
 .btn-outline {
   background: transparent;
   color: rgb(var(--text-normal));
-  border: 1px solid rgba(var(--card-border), 0.9);
+  border: 1px solid rgba(var(--card-border-rgb), 0.9);
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
   font-weight: 500;
@@ -122,14 +132,14 @@ body::before {
 }
 
 .btn-outline:hover {
-  border-color: rgba(var(--accent-primary), 0.9);
+  border-color: rgba(var(--accent-primary-rgb), 0.9);
   color: rgb(var(--text-bright));
 }
 
 /* Selection card styling */
-.selection-card {
-  background-color: rgba(var(--card-bg), 0.6);
-  border: 1px solid rgba(var(--card-border), 0.4);
+ .selection-card {
+  background-color: rgba(var(--card-bg-rgb), 0.6);
+  border: 1px solid rgba(var(--card-border-rgb), 0.4);
   border-radius: 0.5rem;
   transition: all 0.2s ease;
 }
@@ -137,19 +147,19 @@ body::before {
 .selection-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  border-color: rgba(var(--accent-primary), 0.6);
+  border-color: rgba(var(--accent-primary-rgb), 0.6);
 }
 
 .selection-card.selected {
-  background-color: rgba(var(--accent-primary), 0.2);
-  border-color: rgba(var(--accent-primary), 0.8);
-  box-shadow: 0 0 12px rgba(var(--accent-primary), 0.4);
+  background-color: rgba(var(--accent-primary-rgb), 0.2);
+  border-color: rgba(var(--accent-primary-rgb), 0.8);
+  box-shadow: 0 0 12px rgba(var(--accent-primary-rgb), 0.4);
 }
 
 /* Form input styling */
 input, textarea, select {
   background-color: rgba(var(--input-bg), 0.6) !important;
-  border: 1px solid rgba(var(--card-border), 0.6) !important;
+  border: 1px solid rgba(var(--card-border-rgb), 0.6) !important;
   color: rgb(var(--text-normal)) !important;
   border-radius: 0.25rem;
   padding: 0.5rem;
@@ -158,8 +168,8 @@ input, textarea, select {
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: rgba(var(--accent-primary), 0.8) !important;
-  box-shadow: 0 0 0 2px rgba(var(--accent-primary), 0.3);
+  border-color: rgba(var(--accent-primary-rgb), 0.8) !important;
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.3);
 }
 
 input::placeholder, textarea::placeholder {
@@ -167,18 +177,18 @@ input::placeholder, textarea::placeholder {
 }
 
 /* Glow effect for headings */
-h1, h2, h3 {
-  text-shadow: 0 0 10px rgba(var(--accent-primary), 0.3);
+ h1, h2, h3 {
+  text-shadow: 0 0 10px rgba(var(--accent-primary-rgb), 0.3);
   color: rgb(var(--text-bright));
 }
 
 /* Portrait container */
-.portrait-container {
-  border: 2px solid rgba(var(--accent-secondary), 0.6);
+ .portrait-container {
+  border: 2px solid rgba(var(--accent-secondary-rgb), 0.6);
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 0 15px rgba(var(--accent-secondary), 0.4);
-  background-color: rgba(var(--card-bg), 0.4);
+  box-shadow: 0 0 15px rgba(var(--accent-secondary-rgb), 0.4);
+  background-color: rgba(var(--card-bg-rgb), 0.4);
 }
 
 /* Status messages */
@@ -219,6 +229,15 @@ button[disabled],
   filter: grayscale(50%);
 }
 
+/* Utility for muted text */
+.text-secondary {
+  color: rgb(var(--text-secondary-rgb));
+}
+/* Utility for accent text */
+.text-accent-primary {
+  color: rgb(var(--accent-primary-rgb));
+}
+
 /* Make text more readable */
 p {
   color: rgb(var(--text-normal));
@@ -242,7 +261,7 @@ p {
 }
 
 /* Add a subtle glow effect to buttons */
-.btn-primary::after {
+ .btn-primary::after {
   content: '';
   position: absolute;
   top: -5px;
@@ -251,8 +270,8 @@ p {
   bottom: -5px;
   background: linear-gradient(
     to right,
-    rgba(var(--accent-primary), 0.3),
-    rgba(var(--accent-secondary), 0.3)
+    rgba(var(--accent-primary-rgb), 0.3),
+    rgba(var(--accent-secondary-rgb), 0.3)
   );
   border-radius: 0.5rem;
   z-index: -1;

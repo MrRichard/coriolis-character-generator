@@ -68,12 +68,16 @@ export interface GroupTalent {
 
 export interface Origin {
   name: string;
+  // Optional description for display in selection cards
+  description?: string;
 }
 
 export interface Upbringing {
   name: string;
   repBase: number;
   skillPoints: number;
+  attributePoints: number;
+  startingBirr: number;
 }
 
 export interface Humanity {

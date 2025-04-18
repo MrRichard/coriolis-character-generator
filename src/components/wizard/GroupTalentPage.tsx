@@ -4,7 +4,7 @@ import Card from '../Card';
 import Button from '../Button';
 import SelectionCard from '../SelectionCard';
 import { AppState } from '../../lib/types';
-import { GROUP_TALENTS } from '../../lib/data';
+import { GROUP_TALENTS, GROUP_TALENT_DESCRIPTIONS } from '../../lib/data';
 
 interface GroupTalentPageProps {
   appState: AppState;
@@ -46,6 +46,7 @@ const GroupTalentPage: React.FC<GroupTalentPageProps> = ({
           <SelectionCard
             key={talent}
             title={talent}
+            description={GROUP_TALENT_DESCRIPTIONS[talent] || ''}
             selected={appState.groupTalent === talent}
             onClick={() => handleTalentSelect(talent)}
           />

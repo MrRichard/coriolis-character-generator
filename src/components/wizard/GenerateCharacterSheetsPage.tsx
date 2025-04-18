@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import Card from '../Card';
 import Button from '../Button';
 import { AppState } from '../../lib/types';
-import { generateCharacterSheet, addPortraitToSheet } from '../../lib/pdfGenerator';
-import { generatePortrait, getPortraitFallbackText } from '../../lib/imageGenerator';
+import { generateCharacterSheet } from '../../lib/pdfGenerator';
 
 interface GenerateCharacterSheetsPageProps {
   appState: AppState;
@@ -41,30 +40,8 @@ const GenerateCharacterSheetsPage: React.FC<GenerateCharacterSheetsPageProps> = 
         setProgress(`Generating PDF for ${character.name}...`);
         const pdfBytes = await generateCharacterSheet(character);
         
-        // Generate the portrait if possible
-        setProgress(`Generating portrait for ${character.name}...`);
-        let finalPdfBytes = pdfBytes;
-        
-        try {
-          const portraitUrl = await generatePortrait(character);
-          
-          if (portraitUrl) {
-            // Add the portrait to the PDF
-            setProgress(`Adding portrait to PDF for ${character.name}...`);
-            finalPdfBytes = await addPortraitToSheet(pdfBytes, portraitUrl);
-          } else {
-            // Use fallback text
-            setProgress(`Using fallback text for ${character.name}'s portrait...`);
-            // In a real implementation, we would add the fallback text to the PDF
-          }
-        } catch (err) {
-          console.error('Error generating portrait:', err);
-          setProgress(`Error generating portrait for ${character.name}, using fallback...`);
-          // Continue without the portrait
-        }
-        
         // Convert the PDF to a data URL
-        const pdfBlob = new Blob([finalPdfBytes], { type: 'application/pdf' });
+        const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
         const pdfUrl = URL.createObjectURL(pdfBlob);
         
         // Add the generated sheet to the list
@@ -124,8 +101,8 @@ const GenerateCharacterSheetsPage: React.FC<GenerateCharacterSheetsPageProps> = 
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4">Generate Character Sheets</h2>
         <p className="mb-4">
-          Click the button below to generate character sheets for all characters. 
-          This will create PDF files with character information and generate portraits using AI.
+          Click the button below to generate character sheets for all characters.
+          This will create PDF files with character information.
         </p>
         
         {error && (

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Card from '../Card';
 import Button from '../Button';
 import { AppState } from '../../lib/types';
-import { PLAYER_CONCEPTS, getRandomInt } from '../../lib/data';
+import { PLAYER_CONCEPTS, UPBRINGINGS } from '../../lib/data';
 
 interface CharacterAttributesPageProps {
   appState: AppState;
@@ -23,6 +23,8 @@ const CharacterAttributesPage: React.FC<CharacterAttributesPageProps> = ({
   const character = characters[currentPlayerIndex];
   
   const selectedConcept = PLAYER_CONCEPTS.find(c => c.name === character.concept);
+  const selectedUpbringing = UPBRINGINGS.find(u => u.name === character.upbringing);
+  const totalAttributePoints = selectedUpbringing?.attributePoints ?? 10;
   const keyAttribute = selectedConcept?.keyAttribute || '';
   
   const [attributes, setAttributes] = useState({
@@ -32,7 +34,9 @@ const CharacterAttributesPage: React.FC<CharacterAttributesPageProps> = ({
     empathy: character.empathy || 1
   });
   
-  const [pointsRemaining, setPointsRemaining] = useState(10 - (attributes.strength + attributes.agility + attributes.wits + attributes.empathy));
+  const [pointsRemaining, setPointsRemaining] = useState(
+    totalAttributePoints - (attributes.strength + attributes.agility + attributes.wits + attributes.empathy)
+  );
   
   const handleAttributeChange = (attribute: keyof typeof attributes, value: number) => {
     // Check if the new value is valid
@@ -73,8 +77,8 @@ const CharacterAttributesPage: React.FC<CharacterAttributesPageProps> = ({
       empathy: 1
     };
     
-    // Distribute 6 points randomly (10 total - 4 starting points)
-    let pointsToDistribute = 6;
+    // Distribute remaining points randomly (totalAttributePoints - 4 starting points)
+    let pointsToDistribute = totalAttributePoints - 4;
     
     while (pointsToDistribute > 0) {
       // Randomly select an attribute
@@ -117,11 +121,13 @@ const CharacterAttributesPage: React.FC<CharacterAttributesPageProps> = ({
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4">Distribute Attribute Points</h2>
         <p className="mb-4">
-          Distribute 10 points among your attributes. Your key attribute ({keyAttribute}) can go up to 5, others max at 4.
+          Distribute {totalAttributePoints} points among your attributes. Your key attribute ({keyAttribute}) can go up to 5, others max at 4.
         </p>
-        <p className="mb-4 font-medium">
-          Points remaining: {pointsRemaining}
-        </p>
+        {/* Emphasized points remaining */}
+        <div className="mb-4 flex items-baseline space-x-2">
+          <span className="text-2xl font-bold text-accent-primary">{pointsRemaining}</span>
+          <span className="text-lg text-secondary">points remaining</span>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div className="p-3 border rounded-md">
@@ -135,7 +141,7 @@ const CharacterAttributesPage: React.FC<CharacterAttributesPageProps> = ({
               >
                 -
               </button>
-              <span className="mx-3 text-lg font-medium">{attributes.strength}</span>
+              <span className="mx-4 text-2xl font-bold text-accent-primary">{attributes.strength}</span>
               <button 
                 className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center"
                 onClick={() => handleAttributeChange('strength', attributes.strength + 1)}
@@ -156,7 +162,7 @@ const CharacterAttributesPage: React.FC<CharacterAttributesPageProps> = ({
               >
                 -
               </button>
-              <span className="mx-3 text-lg font-medium">{attributes.agility}</span>
+              <span className="mx-4 text-2xl font-bold text-accent-primary">{attributes.agility}</span>
               <button 
                 className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center"
                 onClick={() => handleAttributeChange('agility', attributes.agility + 1)}
@@ -177,7 +183,7 @@ const CharacterAttributesPage: React.FC<CharacterAttributesPageProps> = ({
               >
                 -
               </button>
-              <span className="mx-3 text-lg font-medium">{attributes.wits}</span>
+              <span className="mx-4 text-2xl font-bold text-accent-primary">{attributes.wits}</span>
               <button 
                 className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center"
                 onClick={() => handleAttributeChange('wits', attributes.wits + 1)}
@@ -198,7 +204,7 @@ const CharacterAttributesPage: React.FC<CharacterAttributesPageProps> = ({
               >
                 -
               </button>
-              <span className="mx-3 text-lg font-medium">{attributes.empathy}</span>
+              <span className="mx-4 text-2xl font-bold text-accent-primary">{attributes.empathy}</span>
               <button 
                 className="w-8 h-8 bg-gray-200 rounded-md flex items-center justify-center"
                 onClick={() => handleAttributeChange('empathy', attributes.empathy + 1)}
