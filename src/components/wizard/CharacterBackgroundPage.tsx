@@ -4,7 +4,7 @@ import Card from '../Card';
 import Button from '../Button';
 import SelectionCard from '../SelectionCard';
 import { AppState } from '../../lib/types';
-import { UPBRINGINGS, ORIGINS, PERSONAL_PROBLEMS, HUMANITIES } from '../../lib/data';
+import { UPBRINGINGS, ORIGINS, HOME_WORLDS, PERSONAL_PROBLEMS, HUMANITIES } from '../../lib/data';
 
 interface CharacterBackgroundPageProps {
   appState: AppState;
@@ -32,6 +32,8 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
         groupTalent: appState.groupTalent,
         name: '',
         concept: '',
+        // Background: home world and planetary origin
+        homeWorld: '',
         origin: '',
         upbringing: '',
         humanity: '',
@@ -61,22 +63,34 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
         iconTalent: '',
         personalProblem: '',
         appearance: '',
-        portraitPrompt: ''
+        portraitPrompt: '',
+        startingbirr: 0
       };
       updateAppState({ characters: updatedCharacters });
     }
   }, [appState.characters, currentPlayerIndex, appState.groupConcept, appState.groupTalent, updateAppState]);
 
   // Tab state to switch between menus
-  const [section, setSection] = useState<'origin'|'upbringing'|'humanity'>('origin');
+  const [section, setSection] = useState<'homeWorld'|'origin'|'upbringing'|'humanity'>('homeWorld');
   
   // Get the current character (safely)
   const character = appState.characters[currentPlayerIndex] || {
+    homeWorld: '',
     origin: '',
     upbringing: '',
-    humanity: ''
+    humanity: '',
+    startingbirr: 0
   };
 
+  const handleHomeWorldSelect = (homeWorld: string) => {
+    const updatedCharacters = [...appState.characters];
+    updatedCharacters[currentPlayerIndex] = { 
+      ...(updatedCharacters[currentPlayerIndex] || {}), 
+      homeWorld 
+    };
+    updateAppState({ characters: updatedCharacters });
+  };
+  
   const handleOriginSelect = (origin: string) => {
     const updatedCharacters = [...appState.characters];
     updatedCharacters[currentPlayerIndex] = { 
@@ -104,7 +118,8 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
     updateAppState({ characters: updatedCharacters });
   };
 
-  const canProceed = character.origin !== '' && character.upbringing !== '' && character.humanity !== '';
+  // Require homeWorld, origin, upbringing, and humanity
+  const canProceed = character.homeWorld !== '' && character.origin !== '' && character.upbringing !== '' && character.humanity !== '';
 
   return (
     <div className="max-w-3xl mx-auto py-8">
@@ -114,7 +129,8 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
       {/* Menu Tabs */}
       <div className="flex justify-center mb-6 border-b border-gray-300">
         {[
-          { key: 'origin', label: 'Home World' },
+          { key: 'homeWorld', label: 'Home World' },
+          { key: 'origin', label: 'Origin' },
           { key: 'upbringing', label: 'Upbringing' },
           { key: 'humanity', label: 'Humanity' }
         ].map(({ key, label }) => (
@@ -133,11 +149,31 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
         ))}
       </div>
       
-      {section === 'origin' && (
+      {section === 'homeWorld' && (
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4">Home World</h2>
         <p className="mb-4">
           Select your character's home world:
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+          {HOME_WORLDS.map((hw) => (
+            <SelectionCard
+              key={hw.name}
+              title={hw.name}
+              description={hw.description}
+              selected={character.homeWorld === hw.name}
+              onClick={() => handleHomeWorldSelect(hw.name)}
+              className="h-full"
+            />
+          ))}
+        </div>
+      </Card>
+      )}
+      {section === 'origin' && (
+      <Card className="mb-6">
+        <h2 className="text-xl font-semibold mb-4">Origin</h2>
+        <p className="mb-4">
+          Select your character's planetary origin (star system):
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
           {ORIGINS.map((origin) => (
@@ -187,7 +223,11 @@ const CharacterBackgroundPage: React.FC<CharacterBackgroundPageProps> = ({
             <SelectionCard
               key={humanity.name}
               title={humanity.name}
-              description={`Rep Divisor: ${humanity.repDivisor}`}
+              description={
+                humanity.description
+                  ? humanity.description
+                  : `Rep Divisor: ${humanity.repDivisor}`
+              }
               selected={character.humanity === humanity.name}
               onClick={() => handleHumanitySelect(humanity.name)}
               className="h-full"

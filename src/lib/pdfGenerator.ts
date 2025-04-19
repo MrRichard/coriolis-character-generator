@@ -28,9 +28,10 @@ export async function generateCharacterSheet(character: Character): Promise<Uint
     // Personal information
     form.getTextField('Name').setText(character.name);
     form.getTextField('Concept').setText(character.concept);
-    form.getTextField('Origin').setText(character.origin);
-    form.getTextField('System').setText(character.origin); // Using origin as system
-    form.getTextField('Upbringing').setText(character.upbringing);
+    // Home World and Planetary Origin
+    form.getTextField('Origin').setText(character.homeWorld);
+    form.getTextField('System').setText(character.origin);
+    form.getTextField('Upbringing').setText(character.upbringing); 
     form.getTextField('Problem').setText(character.personalProblem);
     form.getTextField('GroupCon').setText(character.groupConcept);
     
@@ -61,6 +62,17 @@ export async function generateCharacterSheet(character: Character): Promise<Uint
     form.getTextField('Com').setText(character.command.toString());
     
     // Other stats
+    
+    if (character.upbringing == "Plebian") {
+      form.getTextField('Birr').setText("500");
+    } else if (character.upbringing == "Stationary") {
+      form.getTextField('Birr').setText("1000");
+    } else if (character.upbringing == "Privileged") {
+      form.getTextField('Birr').setText("5000");
+    } else {
+      form.getTextField('Birr').setText("0");
+    }
+
     form.getTextField('Rep').setText(character.reputation.toString());
     form.getTextField('HP').setText((character.strength + character.agility).toString());
     form.getTextField('MP').setText((character.wits + character.empathy).toString());
@@ -68,7 +80,9 @@ export async function generateCharacterSheet(character: Character): Promise<Uint
     // Talents
     form.getTextField('TN1').setText(character.talent);
     form.getTextField('TN2').setText(character.groupTalent);
-    form.getTextField('Icon').setText(character.icon);
+    // Icon row: display Icon Talent name only
+    const iconTalentLabel = character.iconTalent || `${character.icon} Talent`;
+    form.getTextField('TN3').setText(iconTalentLabel);
     
     // Appearance
     form.getTextField('Face').setText(character.appearance);

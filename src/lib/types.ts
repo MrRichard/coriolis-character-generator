@@ -2,13 +2,19 @@
 export interface Character {
   name: string;
   concept: string;
+  /** Planetary origin (e.g., Algol, Mira) */
   origin: string;
+  /** Home world classification (Zenitian or Firstcome) */
+  homeWorld: string;
   upbringing: string;
   personalProblem: string;
   groupConcept: string;
   groupTalent: string;
   talent: string;
   icon: string;
+  /** Name of the talent granted by the selected icon */
+  /** Description of the talent granted by the selected icon */
+  iconTalentDescription: string;
   humanity: string;
   
   // Attributes
@@ -39,6 +45,7 @@ export interface Character {
   
   // Other stats
   reputation: number;
+  startingbirr: number;
   
   // Description and portrait
   appearance: string;
@@ -83,6 +90,8 @@ export interface Upbringing {
 export interface Humanity {
   name: string;
   repDivisor: number;
+  /** Description for humanity, displayed in Character Background cards */
+  description: string;
 }
 
 export interface PlayerConcept {
@@ -96,4 +105,15 @@ export interface Talent {
   name: string;
   concepts: string[];
   description: string;
+}
+// Definition for Icons, including description and associated icon talent
+export interface IconDefinition {
+  /** Name of the Icon */
+  name: string;
+  /** Description of the Icon */
+  description: string;
+  /** Name of the talent granted by this Icon */
+  talent: string;
+  /** Description of the talent granted by this Icon */
+  talentDescription: string;
 }
